@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - 'main'
+  workflow_dispatch:
 
 jobs:
   test:
@@ -11,11 +12,24 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
+      GRADLE_ENTERPRISE_URL: https://ge.solutions-team.gradle.com
+
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - run: git remote set-url origin git@github.com:apache/solr.git
     - name: Get the Crave binary
       run: curl -s https://raw.githubusercontent.com/accupara/crave/master/get_crave.sh | bash -s --
     - name: Initialize, build, test
-      run: ./crave run --clean
+      run: ./crave run --clean -c .github/crave.yaml
+    - name: Pull Build Scan
+      if: success() || failure()
+      run: |
+        mkdir gradle-user-home
+        ./crave pull -d gradle-user-home /home/admin/.gradle/build-scan-data
+    - name: Publish Build Scan
+      if: success() || failure()
+      run: ./gradlew buildScanPublishPrevious -Dgradle.user.home=gradle-user-home
