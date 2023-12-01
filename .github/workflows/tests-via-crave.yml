@@ -20,16 +20,28 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - name: Generate crave.yml
+      run: |
+        echo "Solr" > crave.yml
+        echo "  env:" >> crave.yml
+        echo "    CI: true" >> crave.yml
+        echo "    GITHUB_SERVER_URL: GITHUB_SERVER_URL" >> crave.yml
+        echo "    GITHUB_REPOSITORY: GITHUB_REPOSITORY" >> crave.yml
+        echo "    GITHUB_RUN_ID: GITHUB_RUN_ID" >> crave.yml
+        echo "    GITHUB_WORKFLOW: GITHUB_WORKFLOW" >> crave.yml
     - run: git remote set-url origin git@github.com:apache/solr.git
     - name: Get the Crave binary
       run: curl -s https://raw.githubusercontent.com/accupara/crave/master/get_crave.sh | bash -s --
     - name: Initialize, build, test
-      run: ./crave run --clean -c .github/crave.yaml
-    - name: Pull Build Scan
-      if: success() || failure()
       run: |
-        mkdir gradle-user-home
-        ./crave pull -d gradle-user-home /home/admin/.gradle/build-scan-data
-    - name: Publish Build Scan
-      if: success() || failure()
-      run: ./gradlew buildScanPublishPrevious -Dgradle.user.home=gradle-user-home
+        cat .github/crave.yml
+        # ./crave run --clean -c crave.yml
+        ./crave run --env -c crave.yml
+#    - name: Pull Build Scan
+#      if: success() || failure()
+#      run: |
+#        mkdir gradle-user-home
+#        ./crave pull -d gradle-user-home /home/admin/.gradle/build-scan-data
+#    - name: Publish Build Scan
+#      if: success() || failure()
+#      run: ./gradlew buildScanPublishPrevious -Dgradle.user.home=gradle-user-home

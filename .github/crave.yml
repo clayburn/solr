@@ -1,3 +1,3 @@
-Apache Solr:
+Solr:
   env:
     CI: true
