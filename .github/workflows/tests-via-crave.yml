@@ -29,12 +29,12 @@ jobs:
         echo "    GITHUB_REPOSITORY: GITHUB_REPOSITORY" >> crave.yml
         echo "    GITHUB_RUN_ID: GITHUB_RUN_ID" >> crave.yml
         echo "    GITHUB_WORKFLOW: GITHUB_WORKFLOW" >> crave.yml
+        cat crave.yml
     - run: git remote set-url origin git@github.com:apache/solr.git
     - name: Get the Crave binary
       run: curl -s https://raw.githubusercontent.com/accupara/crave/master/get_crave.sh | bash -s --
     - name: Initialize, build, test
       run: |
-        cat .github/crave.yml
         # ./crave run --clean -c crave.yml
         ./crave run --env -c crave.yml
 #    - name: Pull Build Scan
