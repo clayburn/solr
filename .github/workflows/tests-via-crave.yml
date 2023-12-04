@@ -22,13 +22,13 @@ jobs:
         fetch-depth: 0
     - name: Generate crave.yml
       run: |
-        echo "Solr" > crave.yml
+        echo "Solr:" > crave.yml
         echo "  env:" >> crave.yml
         echo "    CI: true" >> crave.yml
-        echo "    GITHUB_SERVER_URL: GITHUB_SERVER_URL" >> crave.yml
-        echo "    GITHUB_REPOSITORY: GITHUB_REPOSITORY" >> crave.yml
-        echo "    GITHUB_RUN_ID: GITHUB_RUN_ID" >> crave.yml
-        echo "    GITHUB_WORKFLOW: GITHUB_WORKFLOW" >> crave.yml
+        echo "    GITHUB_SERVER_URL: $GITHUB_SERVER_URL" >> crave.yml
+        echo "    GITHUB_REPOSITORY: $GITHUB_REPOSITORY" >> crave.yml
+        echo "    GITHUB_RUN_ID: $GITHUB_RUN_ID" >> crave.yml
+        echo "    GITHUB_WORKFLOW: $GITHUB_WORKFLOW" >> crave.yml
         cat crave.yml
     - run: git remote set-url origin git@github.com:apache/solr.git
     - name: Get the Crave binary
