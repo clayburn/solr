@@ -35,7 +35,7 @@ jobs:
       run: curl -s https://raw.githubusercontent.com/accupara/crave/master/get_crave.sh | bash -s --
     - name: Initialize, build, test
       run: |
-        ./crave run --env
+        ./crave run -- env
 #    - name: Pull Build Scan
 #      if: success() || failure()
 #      run: |
